@@ -1,6 +1,7 @@
 package com.dudf.utils
 
 import java.util
+import java.util.Properties
 
 import io.searchbox.client.config.HttpClientConfig
 import io.searchbox.client.{JestClient, JestClientFactory}
@@ -11,7 +12,8 @@ import org.elasticsearch.search.highlight.{HighlightBuilder, HighlightField}
 import org.elasticsearch.search.sort.SortOrder
 
 object MyEsUtil {
-
+  private val properties: Properties = PropertiesUtil.load("config.properties")
+  val esHttp = properties.getProperty("es.http")
   var factory:JestClientFactory=null;
 
   def getClient:JestClient ={
@@ -21,8 +23,9 @@ object MyEsUtil {
   }
 
   def  build(): Unit ={
+
     factory=new JestClientFactory
-    factory.setHttpClientConfig(new HttpClientConfig.Builder("http://hdp1:9200" )
+    factory.setHttpClientConfig(new HttpClientConfig.Builder(esHttp )
       .multiThreaded(true)
       .maxTotalConnection(20)
       .connTimeout(10000).readTimeout(10000).build())
@@ -41,6 +44,8 @@ object MyEsUtil {
     }
     jest.close()
   }
+
+
   def  bulkDoc( sourceList:List[(String,Any)],indexName:String): Unit ={
     if(sourceList!=null&&sourceList.size>0){
       val jest: JestClient = getClient
@@ -53,6 +58,8 @@ object MyEsUtil {
       val result: BulkResult = jest.execute(bulk)
       val items: util.List[BulkResult#BulkResultItem] = result.getItems
       println("保存到ES:"+items.size()+"条数")
+
+      println("=============================")
       jest.close()
     }
   }
