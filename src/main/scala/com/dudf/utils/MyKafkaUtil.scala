@@ -26,7 +26,7 @@ object MyKafkaUtil {
     "auto.offset.reset" -> "earliest",
     //如果是true，则这个消费者的偏移量会在后台自动提交,但是kafka宕机容易丢失数据
     //如果是false，会需要手动维护kafka偏移量
-    "enable.auto.commit" -> (false: java.lang.Boolean)
+    "enable.auto.commit" -> (true: java.lang.Boolean)
   )
 
   // 创建DStream，返回接收到的输入数据

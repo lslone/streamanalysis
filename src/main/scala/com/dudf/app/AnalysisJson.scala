@@ -47,22 +47,19 @@ object AnalysisJson {
       if(JSONUtils.isJSONString(jsonString)){
         val jsonObj: JSONObject = JSON.parseObject(jsonString)
       }*/
-
       val messageString: JSONObject = jsonObj.getJSONObject("message")
       println(messageString)
       messageString
     })*/
 
-/*    val jsonObjDstream: DStream[JSONObject] = inputGetOffsetDstream.map { record =>
+    /*val jsonObjDstream: DStream[JSONObject] = inputGetOffsetDstream.map { record =>
       val jsonString: String = record.value()
       val jsonObj: JSONObject = JSON.parseObject(jsonString)
       val ts: lang.Long = jsonObj.getLong("ts")
       val datehourString: String = new SimpleDateFormat("yyyy-MM-dd HH").format(new Date(ts))
       val dateHour: Array[String] = datehourString.split(" ")
-
       jsonObj.put("dt", dateHour(0))
       jsonObj.put("hr", dateHour(1))
-
       jsonObj
     }*/
 
@@ -113,10 +110,9 @@ object AnalysisJson {
         MyEsUtil.bulkDoc(dauList,"gmall0105_dau_info_"+dt)
 
       }
-      ///
       // 偏移量提交区
       OffsetManager.saveOffset(topic,groupId,offsetRanges)
-      ///
+
 
     }
     jsonStreaming.print()*/
