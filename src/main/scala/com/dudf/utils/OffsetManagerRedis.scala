@@ -1,6 +1,8 @@
 package com.dudf.utils
 
+import java.text.SimpleDateFormat
 import java.util
+import java.util.Date
 
 import org.apache.kafka.common.TopicPartition
 import org.apache.spark.streaming.kafka010.OffsetRange
@@ -38,10 +40,12 @@ object OffsetManagerRedis {
       val partition: Int = offset.partition
       val untilOffset: Long = offset.untilOffset
       offsetMap.put(partition+"",untilOffset+"")
-      println("写入分区："+partition +":"+offset.fromOffset+"-->"+offset.untilOffset)
+      println(groupId+"写入topic:"+topicName+"分区："+partition +":"+offset.fromOffset+"-->"+offset.untilOffset)
     }
     //写入redis
     if(offsetMap!=null&&offsetMap.size()>0){
+      val timedata: Any = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date)
+      println(timedata)
       val jedis: Jedis = RedisUtil.getJedisClient
       jedis.hmset(offsetKey,offsetMap)
       jedis.close()

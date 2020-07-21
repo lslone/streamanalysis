@@ -25,9 +25,9 @@ object MyEsUtil {
   def  build(): Unit ={
 
     factory=new JestClientFactory
-    factory.setHttpClientConfig(new HttpClientConfig.Builder(esHttp )
+    factory.setHttpClientConfig(new HttpClientConfig.Builder("http://10.0.46.146:9200" )
       .multiThreaded(true)
-      .maxTotalConnection(20)
+      .maxTotalConnection(100)
       .connTimeout(10000).readTimeout(10000).build())
 
   }
@@ -94,7 +94,7 @@ object MyEsUtil {
   }
 
   def main(args: Array[String]): Unit = {
-    queryDoc()
+    //queryDoc()
   }
 
 

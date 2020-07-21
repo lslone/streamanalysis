@@ -1,6 +1,5 @@
 package com.dudf.app
 
-import java.text.SimpleDateFormat
 import java.util.{Date, Properties}
 
 import com.alibaba.fastjson.{JSON, JSONObject}
@@ -12,15 +11,16 @@ import org.apache.spark.{SparkConf, TaskContext}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 import org.apache.spark.streaming.kafka010.{HasOffsetRanges, OffsetRange}
-import redis.clients.jedis.Jedis
-
-import scala.collection.mutable.ListBuffer
 
 object ForwardedKafka {
   def main(args: Array[String]): Unit = {
     //1.获得spark streaming执行环境
     val conf: SparkConf = new SparkConf().setAppName("jsonAnalysis2ES").setMaster("local[*]")
-    val ssc: StreamingContext = new StreamingContext(conf,Seconds(5))
+    conf.set("spark.streaming.backpressure.enabled","true")
+    conf.set("spark.streaming.kafka.maxRatePerPartition", "1000")
+
+
+    val ssc: StreamingContext = new StreamingContext(conf,Seconds(3))
 
     //2.得到kafka配置与kafka offsets偏移量
     val properties: Properties = PropertiesUtil.load("config.properties")
@@ -89,7 +89,7 @@ object ForwardedKafka {
           val randomString: String = scala.util.Random.nextInt(10000000).toString
           (dt+randomString, liveIcFav)
         })
-        MyEsUtil.bulkDoc(dList,".monitoring-ls")
+        MyEsUtil.bulkDoc(dList,".monitoring-lszz")
       })
       // 偏移量提交区
       OffsetManagerRedis.saveOffset(topic_name,group_name,offsetRanges)
